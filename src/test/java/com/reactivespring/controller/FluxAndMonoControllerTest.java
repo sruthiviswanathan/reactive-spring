@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 @ExtendWith(SpringExtension.class)
-@WebFluxTest
+@WebFluxTest // Scan the classes with RestController annotation
 public class FluxAndMonoControllerTest {
 
     @Autowired
