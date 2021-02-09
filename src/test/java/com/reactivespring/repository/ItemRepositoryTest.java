@@ -25,7 +25,8 @@ public class ItemRepositoryTest {
     List<Item> itemList = Arrays.asList(
             Item.builder().description("TV").price(300.00).build(),
             Item.builder().description("Fridge").price(400.00).build(),
-            Item.builder().description("Washer").price(600.00).build()
+            Item.builder().description("Washer").price(600.00).build(),
+            Item.builder().id("WACT123").description("Watch").price(600.00).build()
     );
 
     @BeforeEach
@@ -41,8 +42,19 @@ public class ItemRepositoryTest {
     public void getAllItems() {
         StepVerifier.create(itemRepository.findAll())
                 .expectSubscription()
-                .expectNextCount(3)
+                .expectNextCount(4)
                 .verifyComplete();
+    }
+
+    @Test
+    public void getItemById() {
+        String expectedItemDescription = "Watch";
+        StepVerifier.create(itemRepository.findById("WACT123"))
+                .expectSubscription()
+//                .expectNextMatches(response -> response.getDescription().equals(expectedItemDescription))
+                .consumeNextWith(response -> assertEquals(expectedItemDescription, response.getDescription()))
+                .verifyComplete();
+
     }
 
 }
