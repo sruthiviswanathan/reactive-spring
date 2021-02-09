@@ -90,6 +90,7 @@ class ItemControllerTest {
     void deleteItem() {
         webTestClient.delete().uri("/item/WACT123")
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isOk()
+                .expectBody(Void.class);
     }
 }

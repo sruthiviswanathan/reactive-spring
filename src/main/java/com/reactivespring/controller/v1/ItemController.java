@@ -40,7 +40,6 @@ public class ItemController {
 
     @DeleteMapping("/item/{id}")
     public Mono<Void> deleteItem(@PathVariable String id) {
-        return itemRepository.findById(id)
-                .flatMap(item1 -> itemRepository.deleteById(id));
+        return itemRepository.deleteById(id);
     }
 }
