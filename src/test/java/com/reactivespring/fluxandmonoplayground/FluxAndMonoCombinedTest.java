@@ -3,6 +3,7 @@ package com.reactivespring.fluxandmonoplayground;
 import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
+import reactor.test.scheduler.VirtualTimeScheduler;
 
 import java.time.Duration;
 
@@ -36,19 +37,23 @@ public class FluxAndMonoCombinedTest {
 
     @Test
     public void combineUsingConcatWithDelay() {
+        VirtualTimeScheduler.getOrSet(); // Using virtual time reduces build time
+
         Flux<String> flux1 = Flux.just("A", "B", "C").delayElements(Duration.ofSeconds(1));
         Flux<String> flux2 = Flux.just("D", "E", "F").delayElements(Duration.ofSeconds(1));
 
         Flux<String> mergedFlux = Flux.concat(flux1, flux2); // Concat maintains order but it waits for flux1 to complete
 
-        StepVerifier.create(mergedFlux.log())
+        StepVerifier.withVirtualTime(() -> mergedFlux.log())
                 .expectSubscription()
+                .thenAwait(Duration.ofSeconds(6))
                 .expectNext("A", "B", "C", "D", "E", "F")
                 .verifyComplete();
     }
 
     @Test
     public void combineUsingZipWithDelay() {
+        VirtualTimeScheduler.getOrSet();
         Flux<String> flux1 = Flux.just("A", "B", "C").delayElements(Duration.ofSeconds(1));
         Flux<String> flux2 = Flux.just("D", "E", "F").delayElements(Duration.ofSeconds(1));
 
@@ -56,8 +61,9 @@ public class FluxAndMonoCombinedTest {
             return t1.concat(t2);
         }); // A,D: B,E: C,F
 
-        StepVerifier.create(mergedFlux.log())
+        StepVerifier.withVirtualTime(() -> mergedFlux.log())
                 .expectSubscription()
+                .thenAwait(Duration.ofSeconds(6))
                 .expectNext("AD", "BE", "CF")
                 .verifyComplete();
     }
