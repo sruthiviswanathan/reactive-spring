@@ -67,7 +67,7 @@ class ItemControllerTest {
         webTestClient.post().uri("/item")
                 .body(BodyInserters.fromValue(Item.builder().description("BT Speakers").price(4000.00).build()))
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody()
                 .jsonPath("$.id").isNotEmpty()
                 .jsonPath("$.description").isEqualTo("BT Speakers")
@@ -84,6 +84,14 @@ class ItemControllerTest {
                 .jsonPath("$.id").isNotEmpty()
                 .jsonPath("$.description").isEqualTo("Apple Watch")
                 .jsonPath("$.price").isEqualTo(20000.00);
+    }
+
+    @Test
+    void updateItemWithInvalidId() {
+        webTestClient.put().uri("/item/WACT")
+                .body(BodyInserters.fromValue(Item.builder().description("Apple Watch").price(20000.00).build()))
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test

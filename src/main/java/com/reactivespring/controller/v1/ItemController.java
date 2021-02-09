@@ -4,6 +4,8 @@ import com.reactivespring.document.Item;
 import com.reactivespring.repository.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -21,21 +23,21 @@ public class ItemController {
     }
 
     @PostMapping("/item")
-    public Mono<Item> saveItem(@RequestBody Item item) {
-        return itemRepository.save(item);
+    public Mono<ResponseEntity<Item>> saveItem(@RequestBody Item item) {
+        Mono<Item> savedItem = itemRepository.save(item);
+        return Mono.just(new ResponseEntity(savedItem, HttpStatus.CREATED));
     }
 
     @PutMapping("/item/{id}")
-    public Mono<Item> updateItem(@RequestBody Item item, @PathVariable String id) {
-        Mono<Item> updatedItem = itemRepository.findById(id)
-                .map(item1 -> {
+    public Mono<ResponseEntity<Item>> updateItem(@RequestBody Item item, @PathVariable String id) {
+        return itemRepository.findById(id)
+                .flatMap(item1 -> {
                     item1.setPrice(item.getPrice());
                     item1.setDescription(item.getDescription());
-                    return item1;
+                    return itemRepository.save(item1);
                 })
-                .flatMap(item1 -> itemRepository.save(item1));
-
-        return updatedItem;
+                .map(updatedItem -> new ResponseEntity<>(updatedItem, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @DeleteMapping("/item/{id}")
