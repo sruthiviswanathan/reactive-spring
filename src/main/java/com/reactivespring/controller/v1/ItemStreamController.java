@@ -16,7 +16,7 @@ public class ItemStreamController {
     @Autowired
     ItemCappedRepository itemCappedRepository;
 
-//    @GetMapping(value = "/stream/items", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    @GetMapping(value = "/stream/items", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
     public Flux<ItemCapped> getItemStream() {
         // Endpoint wont work since data loader is not present and no data is added to itemCappedRepository
         return itemCappedRepository.findItemsBy();
