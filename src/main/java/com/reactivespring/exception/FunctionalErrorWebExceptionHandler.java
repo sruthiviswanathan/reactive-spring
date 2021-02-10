@@ -37,7 +37,7 @@ public class FunctionalErrorWebExceptionHandler extends AbstractErrorWebExceptio
         log.info("error attribute map: " + errorAttributesMap);
         return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromObject(errorAttributesMap.get("message")));
+                .body(BodyInserters.fromValue(errorAttributesMap.get("message")));
     }
 
 

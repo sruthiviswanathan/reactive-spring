@@ -117,4 +117,11 @@ class ItemsHandlerFunctionTest {
                 .exchange()
                 .expectStatus().isNotFound();
     }
+
+    @Test
+    void testRunTimeException() {
+        webTestClient.get().uri("/func/runtimeException")
+                .exchange()
+                .expectStatus().is5xxServerError();
+    }
 }
