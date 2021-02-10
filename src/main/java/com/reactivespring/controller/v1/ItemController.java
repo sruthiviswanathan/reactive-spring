@@ -51,4 +51,10 @@ public class ItemController {
     public Mono<Void> deleteItem(@PathVariable String id) {
         return itemRepository.deleteById(id);
     }
+
+    @GetMapping("/items/runtimeException")
+    public Flux<Item> runTimeException() {
+        return itemRepository.findAll()
+                .concatWith(Flux.error(new RuntimeException("Runtime exception occurred.")));
+    }
 }
