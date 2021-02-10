@@ -28,6 +28,13 @@ public class ItemController {
         return Mono.just(new ResponseEntity(savedItem, HttpStatus.CREATED));
     }
 
+    @GetMapping("/item/{id}")
+    public Mono<ResponseEntity<Item>> getItemById(@PathVariable String id) {
+        return itemRepository.findById(id)
+                .map((item) -> new ResponseEntity<>(item, HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @PutMapping("/item/{id}")
     public Mono<ResponseEntity<Item>> updateItem(@RequestBody Item item, @PathVariable String id) {
         return itemRepository.findById(id)
