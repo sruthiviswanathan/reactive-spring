@@ -55,6 +55,6 @@ public class ItemController {
     @GetMapping("/items/runtimeException")
     public Flux<Item> runTimeException() {
         return itemRepository.findAll()
-                .concatWith(Flux.error(new RuntimeException("Runtime exception occurred.")));
+                .concatWith(Mono.error(new RuntimeException("Runtime exception occurred.")));
     }
 }
