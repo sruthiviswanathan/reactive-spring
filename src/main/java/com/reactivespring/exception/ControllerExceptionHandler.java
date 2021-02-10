@@ -12,7 +12,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRunTimeException(RuntimeException ex) {
-        log.error("Exception caught in handler: " + ex.getMessage());
+        log.error("Runtime Exception caught in handler: " + ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 

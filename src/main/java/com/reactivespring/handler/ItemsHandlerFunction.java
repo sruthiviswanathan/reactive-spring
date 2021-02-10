@@ -73,4 +73,8 @@ public class ItemsHandlerFunction {
 
     }
 
+    public Mono<ServerResponse> runTimeException(ServerRequest serverRequest) {
+        throw new RuntimeException("RuntimeException occurred");
+    }
+
 }
